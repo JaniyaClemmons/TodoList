@@ -1,39 +1,45 @@
 package com.jcdev.springboottodobackend.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Table(name = "todo_items")
 public class TodoItem {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
+    private Long id;
+
+    @Getter
+    @Setter
     private String task;
+
+    @Getter
+    @Setter
     private Boolean isComplete;
 
-    // source, generate getters & setters
-    public Integer getId() {
-        return id;
+    // source, generate getters & setters of lombok
+
+    public TodoItem() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTask() {
-        return task;
-    }
-
-    public void setTask(String task) {
+    public TodoItem(String task) {
         this.task = task;
+        this.isComplete = false;
     }
 
-    public Boolean getIsComplete() {
-        return isComplete;
-    }
-
-    public void setIsComplete(Boolean isComplete) {
-        this.isComplete = isComplete;
+    // Format for logger purposes
+    @Override
+    public String toString() {
+        return String.format("TodoItem{id=%d, task='%s', isComplete='%s'}", id, task, isComplete);
     }
 
 }
