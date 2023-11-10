@@ -11,6 +11,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,4 +38,16 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.OK).body(todoItems);
 
     }
+
+    // GET all todo items from db
+    @GetMapping("/{id}")
+    public ResponseEntity<?> fetchTodoItem(@PathVariable("id") Long id) {
+
+        logger.info("request to GET one item with id: " + id);
+        TodoItem todoItem = todoService.fetchTodoItem(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(todoItem);
+
+    }
+
 }
