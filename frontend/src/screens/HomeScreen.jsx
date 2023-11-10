@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
- import { fetchTodos } from '../slices/createAction';
+ import { fetchTodos, addTodo, deleteTodo } from '../slices/createAction';
 import {
     Row,
     Col,
@@ -39,38 +39,53 @@ const HomeScreen = () =>
             setInput(e.target.value);
            
         }
-        /*const handleSubmit = (e) => {
-            e.preventDefault();       
+        const handleSubmit = (e) => {
+            e.preventDefault(); 
+            console.log(input)      
             dispatch(addTodo(input));
             setInput('');
             
-        }*/
+        }
+       
                   
       return (
         <>
           {state.isLoading ? (
         <Loader />
       ) : (
-        <>  
-            <InputGroup className="mb-3">
-              <FormControl
-                placeholder="New Todo Item"
-                aria-label="input text"
-                onChange={handleChange}
-              />
-            </InputGroup>  
+        <> 
+        <Form onSubmit={handleSubmit}>
+
+
+            <Form.Group className="mb-3" controlId="toDoItem">
+                <Form.Label>Todo Item</Form.Label>
+                <Form.Control
+                    type="text"
+                    onChange={handleChange}
+                    name="todoItem"
+                    placeholder="New Todo Item"
+                    value={input}
+                    required
+                />
+            </Form.Group>
+            <div className="mb-3">
+                    <Button type="submit" disabled={state.isLoading}>Add Item</Button>
+            </div> 
+        </Form>  
+      
+
+
+       
+        {state.todoItems?.map((todoItem) => {
+          return (
+      
+                <TodoItem key = {todoItem.id} todoItem={todoItem} /> 
+                      
+          );
+        })
+        }
+       
             
-            <ListGroup variant="flush">
-            
-            {state.data?.map((todoItem) => {
-                return (
-                    <Col  key = {todoItem.id} >
-                    <TodoItem todoItem={todoItem} /> 
-                    </Col>
-                );
-            })
-            }
-            </ListGroup>
         </>   
       )}
 
