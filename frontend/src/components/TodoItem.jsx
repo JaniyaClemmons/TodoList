@@ -9,6 +9,17 @@ const TodoItem = ({todoItem}) => {
 
     const dispatch = useDispatch();
     const [checked, setChecked] = useState(todoItem.isComplete);
+    
+    const [editing, setEditing] = useState(false);
+    const [newTask, setNewTask] = useState("");
+
+    let viewMode = {};
+  let editMode = {};
+  if (editing) {
+    viewMode.display = 'none';
+  } else {
+    editMode.display = 'none';
+  }
 
     const removeTodo = (id) => {             
         dispatch(deleteTodo(id));                
@@ -18,18 +29,51 @@ const TodoItem = ({todoItem}) => {
         
         dispatch(updateTodo({...todoItem, isComplete: !todoItem.isComplete}))
     }
-  return (
+    const handleEdit = () => {
+        setEditing(true);
+
+    }  
+    const handleSubmit = (e) => {
+        e.preventDefault(); 
+        dispatch(updateTodo({...todoItem, task: newTask}))
+
+    }
+return (
   <div className='todo'>
     <Card className='my-3 p-3 rounded todo'>
         <Card.Body>
         <Card.Text as='h3'></Card.Text>
-            <div class="form-check">
-                <input onChange = {handleCheck} class="form-check-input" type="checkbox" value={checked} id="flexCheckDefault" defaultChecked = {checked} />
-                <label class="form-check-label" for="flexCheckDefault">
+            <div className="form-check" style={viewMode}>
+                <input onChange = {handleCheck} className="form-check-input" type="checkbox" value={checked} id="flexCheckDefault" defaultChecked = {checked} />
+                <label className="form-check-label" htmlFor="flexCheckDefault">
                     <span style={{ textDecoration: todoItem.isComplete ? "line-through" : "" }}>{todoItem.task}</span>
-                    <Button variant="outline-danger" onClick={() => removeTodo(todoItem.id)}>✕</Button>
+                    <Button onClick={handleEdit} name={todoItem._id} variant='light' className='btn-sm'>
+                                            <i className='fas fa-edit'></i>
+                                        </Button>
+                    <Button variant="outline-danger" onClick={() => removeTodo(todoItem.id)}>
+                    <i className='fas fa-trash'></i>
+                    </Button>
                  </label>
             </div>
+            <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="toDoItem">
+                
+                <Form.Control
+                    style={editMode}
+                    type="text"
+                    onChange={(e) => setNewTask(e.target.value)}
+                    name="textInput"
+                    placeholder={todoItem.task}
+                    value={newTask}
+                    required
+                />
+                
+                    <Button type="submit" >Add Item</Button>
+           
+            </Form.Group>
+            
+        </Form>  
+
         </Card.Body>
     </Card>
             
