@@ -1,5 +1,5 @@
  import { createSlice } from '@reduxjs/toolkit';
-import { fetchTodos, fetchTodo, addTodo, deleteTodo } from "./createAction";
+import { fetchTodos, fetchTodo, addTodo, deleteTodo, updateTodo } from "./createAction";
 
  const todoSlice = createSlice({
     name: "todo",
@@ -39,6 +39,20 @@ import { fetchTodos, fetchTodo, addTodo, deleteTodo } from "./createAction";
       state.todoItems.push(action.payload);
      })
      builder.addCase(addTodo.rejected, (state, action) => {
+      state.isError = true;
+     })
+     builder.addCase(updateTodo.pending, (state, action) => {
+      state.isLoading = true;
+     })
+     builder.addCase(updateTodo.fulfilled, (state, action) => {    
+      state.isLoading = false;
+      console.log(action.payload);
+      state.todoItems = state.todoItems.map((item) => item.id === action.payload.id ? (item.task === action.payload.task? {...item, isComplete: !item.isComplete} : item = action.payload): item);
+      console.log(state.todoItems);
+      //state.todoItems.push(action.payload);
+      
+     })
+     builder.addCase(updateTodo.rejected, (state, action) => {
       state.isError = true;
      })
      builder.addCase(deleteTodo.pending, (state, action) => {
