@@ -1,45 +1,84 @@
-import React, {useState} from "react";
-import { useDispatch} from "react-redux";
-import { addTodo } from "../slices/todoSlice";
-import Tasks from "../components/Tasks";
+import { useEffect, useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
+ import { fetchTodos } from '../slices/createAction';
+import {
+    Row,
+    Col,
+    Card,
+    Form,
+    FormControl,
+    InputGroup,
+    Badge,
+    ListGroup,
+    Button
+  } from "react-bootstrap";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+import TodoItem from "../components/TodoItem";
+
 
 const HomeScreen = () =>
     {
+        const dispatch = useDispatch();
+        const state = useSelector((state) => state.todo);
+
+        console.log("state", state);
+        
+        
     
+        useEffect(()=> {
+            dispatch(fetchTodos());
+
+        },[])
         const [input, setInput] = useState('');
-        const dispatch = useDispatch()
+        
        
     
         const handleChange = (e) => {
             setInput(e.target.value);
            
         }
-        const handleSubmit = (e) => {
+        /*const handleSubmit = (e) => {
             e.preventDefault();       
             dispatch(addTodo(input));
             setInput('');
             
-        }
-    
+        }*/
+                  
       return (
         <>
-            <form onSubmit = {handleSubmit}>
-            <label htmlFor="item">
-                Todo
-            </label>
-            <input onChange= {handleChange} name='item' type='text' placeholder="Wash the car" value={input} />
-            <button  type='submit' value='submit'>
-            Submit
-            </button>
-     
-            </form>
-            <Tasks />
+          {state.isLoading ? (
+        <Loader />
+      ) : (
+        <>  
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="New Todo Item"
+                aria-label="input text"
+                onChange={handleChange}
+              />
+            </InputGroup>  
             
+            <ListGroup variant="flush">
+            
+            {state.data?.map((todoItem) => {
+                return (
+                    <Col  key = {todoItem.id} >
+                    <TodoItem todoItem={todoItem} /> 
+                    </Col>
+                );
+            })
+            }
+            </ListGroup>
+        </>   
+      )}
+
         </>
         
+      
     
-    
-      ) 
+      )
     }
 
 export default HomeScreen;
