@@ -11,7 +11,8 @@ import {
     InputGroup,
     Badge,
     ListGroup,
-    Button
+    Button,
+    Container
   } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -49,47 +50,66 @@ const HomeScreen = () =>
        
                   
       return (
-        <>
+        <div className="home container">
+          <h1 className="text-center mb-4">Todo List</h1>
+        
+
+          
           {state.isLoading ? (
         <Loader />
       ) : (
         <> 
-        <Form onSubmit={handleSubmit}>
+       
+        <Form className="form-inline" onSubmit={handleSubmit}>
 
 
-            <Form.Group className="mb-3" controlId="toDoItem">
-                <Form.Label>Todo Item</Form.Label>
+            <Form.Group controlId="toDoItem">
+            <InputGroup >
                 <Form.Control
+                    className =" mb-4"
                     type="text"
                     onChange={handleChange}
                     name="todoItem"
-                    placeholder="New Todo Item"
+                    placeholder="Enter New Todo Item"
                     value={input}
                     required
                 />
+                 
+                  <Button  variant= "outline-success ms-2 mb-4" type="submit" disabled={state.isLoading}>Add Item</Button>
+                  
+                  </InputGroup>
             </Form.Group>
-            <div className="mb-3">
-                    <Button type="submit" disabled={state.isLoading}>Add Item</Button>
-            </div> 
+            
+            
         </Form>  
       
-
+       
+        
+        <div>
 
        
         {state.todoItems?.map((todoItem) => {
           return (
-      
+          
+                
+                  
+            <Card>
+              <Card.Body>
                 <TodoItem key = {todoItem.id} todoItem={todoItem} /> 
+                </Card.Body>
+            </Card>
                       
           );
         })
         }
        
-            
+       
+        </div>  
         </>   
       )}
-
-        </>
+      
+  
+        </div>
         
       
     
